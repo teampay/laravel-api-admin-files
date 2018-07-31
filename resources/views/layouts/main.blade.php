@@ -10,7 +10,21 @@
 @yield('content')
 
 <script>
-    new Fingerprint2().get(function(result, components) {
+    var options = {
+        excludeAudio: true,
+        excludeCanvas: true,
+        excludeWebGLVendorAndRenderer: true,
+        excludeJsFonts: true,
+        excludeFlashFonts: true,
+        excludeWebGL: true,
+        excludeSessionStorage: true,
+        excludeColorDepth: true,
+        excludeAdBlock: true,
+        excludeHardwareConcurrency: true,
+        excludeOpenDatabase: true,
+        excludeHardwareConcurrency: true,
+    }
+    new Fingerprint2(options).get(function(result, components) {
         console.log(result) // a hash, representing your device fingerprint
         console.log(components) // an array of FP components
       });
