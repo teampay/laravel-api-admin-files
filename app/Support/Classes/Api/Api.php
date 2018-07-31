@@ -77,6 +77,8 @@ class Api
      */
     public $apiMethod = null;
 
+    protected $withEntity = [];
+
     /**
      * Max number which be add to nonce for one auth request
      *
@@ -982,6 +984,13 @@ class Api
         return $this->captcha;
     }
 
+    public function withEntity($entityName, $requestFields = [])
+    {
+        $this->withEntity[ $entityName ] = $requestFields;
+
+        return $this;
+    }
+
     /**
      * Create new API request.
      *
@@ -999,7 +1008,8 @@ class Api
             $this->request,
             $this->config,
             $this->str,
-            $this->apiMethod
+            $this->apiMethod,
+            $this->withEntity
         );
 
         $this->apiMethod = null;

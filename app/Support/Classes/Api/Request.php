@@ -89,6 +89,8 @@ class Request
      */
     protected $maxMultipartDepth = 5;
 
+    protected $withEntity = [];
+
     /**
      * @var array Matching api methods with entity
      */
@@ -139,7 +141,8 @@ class Request
         IlluminateRequest $request,
         Repository $config,
         Str $str,
-        $apiMethod = null)
+        $apiMethod = null,
+        $withEntity = [])
     {
         $this->config = $config;
         $this->guzzle = $guzzle;
@@ -149,6 +152,7 @@ class Request
         $this->withAuth = $withAuth;
         $this->auth = $auth;
         self::$apiMethod = $apiMethod;
+        $this->withEntity = $withEntity;
     }
 
     /**
@@ -770,6 +774,11 @@ class Request
     {
         $parameters = array_wrap(!empty($parameters) ?
             $parameters : $this->parameters['form_data']);
+
+
+        foreach ($this->withEntity as $entity => $fields) {
+            $parameters[ $entity ] = $fields;
+        }
 
         if ($this->hasMultipartData($parameters)) {
             $config['multipart'] = $this->buildMultipartData($parameters);
