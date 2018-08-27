@@ -1064,20 +1064,30 @@ class Request
 
         foreach ($this->parameters[ 'query' ][ 'where' ] as $partConditions) {
             if ($partConditions[ 'type' ] !== 'group') {
+                $where[] = $partConditions;
                 continue;
             }
 
-            foreach ($partConditions[ 'conditions' ] as $itemCondition) {
-                if ($itemCondition[ 'type' ] !== 'condition') {
+            $values = [];
+
+            foreach ($partConditions[ 'conditions' ] as &$itemCondition) {
+                if ($itemCondition[ 'type' ] != 'condition') {
                     continue;
                 }
 
-                $where[] = sprintf('%s=%s', $itemCondition[ 'field' ], $itemCondition[ 'value' ]);
+                if ($itemCondition[ 'condition' ] === 'like') {
+                    $itemCondition[ 'value' ] = str_replace('%', '[\D]*', $itemCondition[ 'value' ]);
+                }
             }
+
+            $where[] = [
+                'type' => 'group',
+                'value' => $partConditions[ 'conditions' ],
+            ];
 
         }
 
-        return json_encode($where);
+        return str_replace('\\\\', '\\', json_encode($where, JSON_UNESCAPED_SLASHES));
     }
 
     /**
