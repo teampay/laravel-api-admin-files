@@ -34,11 +34,16 @@ class StatisticController extends Controller
             ->publicStatistics()
             ->order('date|text')
             ->sort('desc')
-            ->where(['is_agent', '=', 'false'])
-            ->startDate('2018-01-01')
-            ->endDate(date('Y-m-d'))
+            ->where(['firstname', 'like', '%ben', 'or'], ['secondname', '=', 'ned', 'or'], ['lastname', '=', 'test', 'or'], ['city', '=', 'Kiev', 'or'], ['country', '=', 'Ukraine'])
+            ->andWhere(['investment_plan_id', '=', '1'])
+            ->andWhere(['is_agent', '=', '1'])
+            //->startDate('2018-01-01')
+            //->endDate(date('Y-m-d'))
             ->pagination($request->get('page'), $request->get('perPage'))
-            ->get();
+            ->json();
+
+        dd($statistics);
+        exit;
 
         $pagination = $statistics->pagination();
 
