@@ -47,7 +47,7 @@
 
                         @endif
 
-                        <p>{!! $post->body !!}</p>
+                        <p>{!! $post->body_formatter !!}</p>
 
                         <div>
                             Tags:

@@ -125,6 +125,16 @@ class Post extends VoyagerPost
         return [];
     }
 
+    public function getBodyFormatterAttribute()
+    {
+        return preg_replace_callback('#href="\[\[.*?"#', function($match) {
+            return strtr($match[ 0 ], [
+                '\'' => '&quot;',
+                '"' => '\'',
+            ]);
+        }, $this->body);
+    }
+
     public function getIsBelongsRootCategoryAttribute()
     {
         return in_array($this->category_id, [Category::CATEGORY_NEWS_ID, Category::CATEGORY_KNOWLEDGE_ID]);
