@@ -5,9 +5,15 @@
         <h1 class="page-title">
             <i class="voyager-categories"></i> Categories
         </h1>
-        <a href="/admin/categories/create" class="btn btn-success btn-add-new">
-        <i class="voyager-plus"></i> <span>Добавить</span>
-        </a>
+
+        @can('add_categories', $categoryItem)
+
+            <a href="/admin/categories/create" class="btn btn-success btn-add-new">
+            <i class="voyager-plus"></i> <span>Добавить</span>
+            </a>
+
+        @endcan
+
     </div>
     <div class="page-content browse container-fluid">
         @include('voyager::alerts')
@@ -48,15 +54,29 @@
                                             </td>
 
                                             <td class="no-sort no-click" id="bread-actions">
-                                                <a href="javascript:;" title="Удалить" class="btn btn-sm btn-danger pull-right delete" data-id="{{ $category->id }}" id="delete-{{ $category->id }}">
-                                                    <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Удалить</span>
-                                                </a>
-                                                <a href="/admin/categories/{{ $category->id }}/edit" title="Изменить" class="btn btn-sm btn-primary pull-right edit">
-                                                    <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Изменить</span>
-                                                </a>
-                                                <a href="/admin/categories/{{ $category->id }}" title="Просмотр" class="btn btn-sm btn-warning pull-right view">
-                                                    <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Просмотр</span>
-                                                </a>
+
+                                                @can('delete_categories', $categoryItem)
+
+                                                    <a href="javascript:;" title="Удалить" class="btn btn-sm btn-danger pull-right delete" data-id="{{ $category->id }}" id="delete-{{ $category->id }}">
+                                                        <i class="voyager-trash"></i> <span class="hidden-xs hidden-sm">Удалить</span>
+                                                    </a>
+
+                                                @endcan
+                                                @can('edit_categories', $categoryItem)
+
+                                                    <a href="/admin/categories/{{ $category->id }}/edit" title="Изменить" class="btn btn-sm btn-primary pull-right edit">
+                                                        <i class="voyager-edit"></i> <span class="hidden-xs hidden-sm">Изменить</span>
+                                                    </a>
+
+                                                @endcan
+                                                @can('read_categories', $categoryItem)
+
+                                                    <a href="/admin/categories/{{ $category->id }}" title="Просмотр" class="btn btn-sm btn-warning pull-right view">
+                                                        <i class="voyager-eye"></i> <span class="hidden-xs hidden-sm">Просмотр</span>
+                                                    </a>
+
+                                                @endcan
+
                                             </td>
                                         </tr>
 

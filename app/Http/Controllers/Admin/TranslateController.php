@@ -8,6 +8,7 @@ use TCG\Voyager\Http\Controllers\Controller as VoyagerController;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Http\Request;
 use App\Models\FileTranslation;
+use Gate;
 
 /**
  * Controller for translane language files.
@@ -22,12 +23,18 @@ class TranslateController extends VoyagerController
      */
     public function index(Request $request)
     {
+        $fileTranslation = new FileTranslation();
+
+        if ($request->user()->cannot('browse_translates', $fileTranslation)) {
+            abort(403);
+        }
+
         $languages = $this->getLangs();
         $langFiles = $this->getListLangFiles();
         $this->createNewLangFiles($langFiles, $languages);
         $langFiles = $this->sortFilesByLang($langFiles, $languages);
 
-        return view('admin.translate.index', compact('languages', 'langFiles'));
+        return view('admin.translate.index', compact('languages', 'langFiles', 'fileTranslation'));
     }
 
     /**
@@ -39,6 +46,12 @@ class TranslateController extends VoyagerController
      */
     public function editLangFile(Request $request, $cryptFileName)
     {
+        $fileTranslation = new FileTranslation();
+
+        if ($request->user()->cannot('edit_lang_file', $fileTranslation)) {
+            abort(403);
+        }
+
         $fileName = Crypt::decryptString($cryptFileName);
 
         if (!file_exists($fileName)) {
@@ -56,7 +69,7 @@ class TranslateController extends VoyagerController
 
         $formElements = $this->flattenKeysRecursively($content);
 
-        return view('admin.translate.edit', compact('formElements', 'cryptFileName'));
+        return view('admin.translate.edit', compact('formElements', 'cryptFileName', 'fileTranslation'));
     }
 
     /**
@@ -68,6 +81,12 @@ class TranslateController extends VoyagerController
      */
     public function updateLangFile(Request $request, $cryptFileName)
     {
+        $fileTranslation = new FileTranslation();
+
+        if ($request->user()->cannot('edit_lang_file', $fileTranslation)) {
+            abort(403);
+        }
+
         $fileName = Crypt::decryptString($cryptFileName);
 
         if (!file_exists($fileName)) {
@@ -95,6 +114,12 @@ class TranslateController extends VoyagerController
      */
     public function addKeysToLangFiles(Request $request, $cryptFileName)
     {
+        $fileTranslation = new FileTranslation();
+
+        if ($request->user()->cannot('add_new_keys_to_translates', $fileTranslation)) {
+            abort(403);
+        }
+
         $fileName = Crypt::decryptString($cryptFileName);
 
         if (!file_exists($fileName)) {
@@ -157,6 +182,12 @@ class TranslateController extends VoyagerController
      */
     public function upgradeLangFiles(Request $request)
     {
+        $fileTranslation = new FileTranslation();
+
+        if ($request->user()->cannot('upgrade_lang_files', $fileTranslation)) {
+            abort(403);
+        }
+
         $languages = $this->getLangs();
         $langFiles = $this->getListLangFiles();
 
@@ -208,6 +239,12 @@ class TranslateController extends VoyagerController
      */
     public function exportToDb(Request $request)
     {
+        $fileTranslation = new FileTranslation();
+
+        if ($request->user()->cannot('export_to_db', $fileTranslation)) {
+            abort(403);
+        }
+
         FileTranslation::truncate();
         $langFiles = $this->getListLangFiles();
 
@@ -227,6 +264,12 @@ class TranslateController extends VoyagerController
      */
     public function updateTranslationInDb(Request $request)
     {
+        $fileTranslation = new FileTranslation();
+
+        if ($request->user()->cannot('update_translation_in_db', $fileTranslation)) {
+            abort(403);
+        }
+
         $languages = $this->getLangs();
         $langFiles = $this->getListLangFiles();
         $langFiles = $this->sortFilesByLang($langFiles, $languages);
@@ -250,6 +293,12 @@ class TranslateController extends VoyagerController
      */
     public function importFromDb(Request $request)
     {
+        $fileTranslation = new FileTranslation();
+
+        if ($request->user()->cannot('import_from_db', $fileTranslation)) {
+            abort(403);
+        }
+
         $translations = FileTranslation::get();
 
         $langPath = app()->langPath();

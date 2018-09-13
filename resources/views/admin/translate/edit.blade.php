@@ -11,7 +11,12 @@
         <i class="voyager-file-text"></i>
         Edit lang file
     </h1>
-    <a class="btn btn-success" id="btn-add-fields" href="">Добавить поля</a>
+
+    @can('add_new_keys_to_translates', $fileTranslation)
+
+        <a class="btn btn-success" id="btn-add-fields" href="">Добавить поля</a>
+
+    @endcan
 @endsection
 
 @section('breadcrumbs')
@@ -210,6 +215,8 @@
               selector: 'textarea',
               menubar:false,
               forced_root_block : false,
+              plugins: "code, textcolor",
+              toolbar: "bold italic | underline strikethrough | fontsizeselect | forecolor backcolor | code"
             });
         }
     </script>

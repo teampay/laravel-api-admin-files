@@ -12,6 +12,9 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/categories/create', 'Admin\CategoriesController@create')->name('voyager.categories.create');
     Route::get('/categories/{category}/edit', 'Admin\CategoriesController@edit')->name('voyager.categories.edit');
     Route::get('/categories-list/{id?}', 'Admin\CategoriesController@index')->name('voyager.categories.index');
+    Route::get('/users/create', 'Admin\UserController@create')->name('voyager.users.create');
+    Route::post('/users/store', 'Admin\UserController@store')->name('voyager.users.store');
+    Route::get('/users/{user}/edit', 'Admin\UserController@edit')->name('voyager.users.edit');
     Route::get('/translates', 'Admin\TranslateController@index')->name('lang.file.index');
     Route::get('/translates/edit-lang-file/{cryptFileName}', 'Admin\TranslateController@editLangFile')->name('lang.file.form');
     Route::put('/translates/update-lang-file/{cryptFileName}', 'Admin\TranslateController@updateLangFile')->name('lang.file.update');

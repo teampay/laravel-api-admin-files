@@ -191,9 +191,6 @@
                                         @endforeach
                                         <td class="no-sort no-click" id="bread-actions">
                                             @foreach(Voyager::actions() as $index => $action)
-                                                @if ($index == 1)
-                                                    @continue
-                                                @endif
                                                 @include('voyager::bread.partials.actions', ['action' => $action])
                                             @endforeach
                                         </td>

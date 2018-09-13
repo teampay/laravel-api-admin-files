@@ -15,10 +15,27 @@
     <h1 class="page-title">
         <i class="voyager-file-text"></i> List translates &nbsp;
     </h1>
-    <a class="btn btn-success" href="{{ route('lang.file.upgrade') }}">Обновить изменения в файлах</a>
-    <a class="btn btn-primary" href="{{ route('lang.file.export-to-db') }}">Экспортировать переводы в базу</a>
-    <a class="btn btn-warning" href="{{ route('lang.file.update-db') }}">Обновить переводы в базе</a>
-    <a class="btn btn-danger" href="{{ route('lang.file.import-from-db') }}">Перенести переводы из базы</a>
+
+    @can('upgrade_lang_files', $fileTranslation)
+
+        <a class="btn btn-success" href="{{ route('lang.file.upgrade') }}">Обновить изменения в файлах</a>
+
+    @endcan
+    @can('export_to_db', $fileTranslation)
+
+        <a class="btn btn-primary" href="{{ route('lang.file.export-to-db') }}">Экспортировать переводы в базу</a>
+
+    @endcan
+    @can('update_translation_in_db', $fileTranslation)
+
+        <a class="btn btn-warning" href="{{ route('lang.file.update-db') }}">Обновить переводы в базе</a>
+
+    @endcan
+    @can('import_from_db', $fileTranslation)
+
+        <a class="btn btn-danger" href="{{ route('lang.file.import-from-db') }}">Перенести переводы из базы</a>
+
+    @endcan
 
 @endsection
 
@@ -53,7 +70,15 @@
 
                                             <tr role="row">
                                                 <td><i class="voyager-data"></i> {{ $fileUrl[ 'uri' ] }}</td>
-                                                <td><a href="{{ route('lang.file.form', ['cryptFileName' => $fileUrl[ 'code' ]]) }}">Edit</a></td>
+                                                <td>
+
+                                                    @can('edit_lang_file', $fileTranslation)
+
+                                                        <a href="{{ route('lang.file.form', ['cryptFileName' => $fileUrl[ 'code' ]]) }}">Edit</a>
+
+                                                    @endcan
+
+                                                </td>
                                             </tr>
 
                                         @endforeach

@@ -13,12 +13,18 @@ use TCG\Voyager\Events\BreadDataUpdated;
 
 class CategoriesController extends VoyagerBaseController
 {
-    public function index($id = null)
+    public function index(Request $request, $id = null)
     {
         $categories = Category::where('parent_id', $id)
             ->paginate();
 
-        return view('admin.categories.index', compact('categories'));
+        $categoryItem = new Category();
+
+        if ($request->user()->cannot('browse_categories', $categoryItem)) {
+            abort(403);
+        }
+
+        return view('admin.categories.index', compact('categories', 'categoryItem'));
     }
 
     //***************************************
@@ -44,6 +50,10 @@ class CategoriesController extends VoyagerBaseController
         //$this->authorize('add', app($dataType->model_name));
 
         $dataTypeContent = new Category();
+
+        if ($request->user()->cannot('add_categories', $dataTypeContent)) {
+            abort(403);
+        }
 
         foreach ($dataType->addRows as $key => $row) {
             $details = json_decode($row->details);
@@ -74,6 +84,12 @@ class CategoriesController extends VoyagerBaseController
      */
     public function store(Request $request)
     {
+        $categoryItem = new Category();
+
+        if ($request->user()->cannot('add_categories', $categoryItem)) {
+            abort(403);
+        }
+
         $slug = $this->getSlug($request);
 
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
@@ -130,6 +146,10 @@ class CategoriesController extends VoyagerBaseController
             ->with($relationships)
             ->firstOrFail();
 
+        if ($request->user()->cannot('edit_categories', $dataTypeContent)) {
+            abort(403);
+        }
+
         foreach ($dataType->editRows as $key => $row) {
             $details = json_decode($row->details);
             $dataType->editRows[$key]['col_width'] = isset($details->width) ? $details->width : 100;
@@ -167,6 +187,10 @@ class CategoriesController extends VoyagerBaseController
 
         $data = Category::where('id', $id)
             ->firstOrFail();
+
+        if ($request->user()->cannot('edit_categories', $data)) {
+            abort(403);
+        }
 
         // Check permission
         //$this->authorize('edit', $data);

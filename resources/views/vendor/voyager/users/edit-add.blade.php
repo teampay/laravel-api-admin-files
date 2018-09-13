@@ -40,27 +40,40 @@
 
                         <div class="panel-body">
                             <div class="form-group">
+                                <label for="login">role</label>
+                                <select name="role_id" class="form-control">
+
+                                    @foreach ($listRoles as $roleId => $roleName)
+
+                                        <option value="{{ $roleId }}" {{ ((isset($dataTypeContent->role_id) && $dataTypeContent->role_id == $roleId) || old('role_id') == $roleId) ? 'selected' : '' }}>{{ $roleName }}</option>
+
+                                    @endforeach
+
+                                </select>
+                            </div>
+
+                            <div class="form-group">
                                 <label for="login">login</label>
                                 <input type="text" class="form-control" id="login" name="login" placeholder="login"
-                                       value="@if(isset($dataTypeContent->login)){{ $dataTypeContent->login }}@endif">
+                                       value="@if(isset($dataTypeContent->login)){{ $dataTypeContent->login }} @else {{ old('login') }}@endif">
                             </div>
 
                             <div class="form-group">
                                 <label for="email">{{ __('voyager::generic.email') }}</label>
                                 <input type="email" class="form-control" id="email" name="email" placeholder="{{ __('voyager::generic.email') }}"
-                                       value="@if(isset($dataTypeContent->email)){{ $dataTypeContent->email }}@endif">
+                                       value="@if(isset($dataTypeContent->email)){{ $dataTypeContent->email }} @else {{ old('email') }}@endif">
                             </div>
 
                             <div class="form-group">
                                 <label for="api_token">Api token</label>
                                 <input type="text" class="form-control" id="api_token" name="api_token" placeholder="api token"
-                                       value="@if(isset($dataTypeContent->api_token)){{ $dataTypeContent->api_token }}@endif">
+                                       value="@if(isset($dataTypeContent->api_token)){{ $dataTypeContent->api_token }}@else {{ $customApiToken }} @endif" readonly="readonly">
                             </div>
 
                             <div class="form-group">
                                 <label for="api_id">Api id</label>
                                 <input type="text" class="form-control" id="api_id" name="api_id" placeholder="api id"
-                                       value="@if(isset($dataTypeContent->api_id)){{ $dataTypeContent->api_id }}@endif">
+                                       value="@if(isset($dataTypeContent->api_id)){{ $dataTypeContent->api_id }}@else {{ $customApiId }} @endif" readonly="readonly">
                             </div>
 
                             <div class="form-group">
@@ -72,26 +85,6 @@
                                 <input type="password" class="form-control" id="password" name="password" value="" autocomplete="new-password">
                             </div>
 
-                            @can('editRoles', $dataTypeContent)
-                                <div class="form-group">
-                                    <label for="default_role">{{ __('voyager::profile.role_default') }}</label>
-                                    @php
-                                        $dataTypeRows = $dataType->{(isset($dataTypeContent->id) ? 'editRows' : 'addRows' )};
-
-                                        $row     = $dataTypeRows->where('field', 'user_belongsto_role_relationship')->first();
-                                        $options = json_decode($row->details);
-                                    @endphp
-                                    @include('voyager::formfields.relationship')
-                                </div>
-                                <div class="form-group">
-                                    <label for="additional_roles">{{ __('voyager::profile.roles_additional') }}</label>
-                                    @php
-                                        $row     = $dataTypeRows->where('field', 'user_belongstomany_role_relationship')->first();
-                                        $options = json_decode($row->details);
-                                    @endphp
-                                    @include('voyager::formfields.relationship')
-                                </div>
-                            @endcan
                             @php
                             if (isset($dataTypeContent->locale)) {
                                 $selected_locale = $dataTypeContent->locale;
